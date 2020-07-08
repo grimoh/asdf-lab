@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -e
+
+# check ASDF environment variables
+[ -n "$ASDF_INSTALL_VERSION" ] || (echo 'Missing ASDF_INSTALL_VERSION' >&2 && exit 1)
+[ -n "$ASDF_INSTALL_PATH" ] || (echo 'Missing ASDF_INSTALL_PATH' >&2 && exit 1)
+
+mkdir -p "${ASDF_INSTALL_PATH}/bin"
+toolPath="${ASDF_INSTALL_PATH}/bin/lab"
+downloadPath="$(mktemp -d)"
+cd "${downloadPath}"
+
+case "$(uname -s)" in
+	"Darwin")
+		DOWNLOAD_URL="https://github.com/zaquestion/lab/releases/download/v${ASDF_INSTALL_VERSION}/lab_${ASDF_INSTALL_VERSION}_darwin_amd64.tar.gz"
+		;;
+	"Linux")
+		DOWNLOAD_URL="https://github.com/zaquestion/lab/releases/download/v${ASDF_INSTALL_VERSION}/lab_${ASDF_INSTALL_VERSION}_linux_amd64.tar.gz"
+		;;
+esac
+
+curl -fL -o "${downloadPath}/lab.tar.gz" "${DOWNLOAD_URL}"
+tar xzf lab.tar.gz
+mv ./lab "${toolPath}"
+chmod +x "${toolPath}"
+rm -rf "${downloadPath}"
