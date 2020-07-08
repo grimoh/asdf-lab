@@ -5,5 +5,5 @@
 
 ## Install
 ```
-asdf plugin add lab
+asdf plugin add lab https://github.com/grimoh/asdf-lab.git
 ```
